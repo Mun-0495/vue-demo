@@ -6,7 +6,8 @@
         <ul class="project-list">
           <li v-for="project in projects" :key="project.id" @click="goToProjectHistory(project.id)">
             <div class="project-card">
-              {{ project.name }} - Last analyzed on {{ project.lastAnalyzed }}
+              <div class="project-name">{{ project.name }}</div>
+              <div class="project-date">Last analyzed on {{ project.lastAnalyzed }}</div>
             </div>
           </li>
         </ul>
@@ -37,8 +38,7 @@ export default {
 
 <style scoped>
 body {
-  background-color: #bde2c7;
-  color: #538560;
+  color: #2c3e50;
   font-family: Arial, sans-serif;
 }
 
@@ -49,14 +49,26 @@ body {
 
 h1 {
   margin-top: 50px;
-  color: #538560;
+  color: #2c3e50;
+  position: relative;
+  padding-bottom: 10px; /* 아래쪽 패딩을 줄여서 Project A 부분이 내려가지 않도록 설정 */
+}
+
+h1:after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0; /* 가로선을 조금 아래로 내림 */
 }
 
 .project-list-wrapper {
-  border: 2px solid #538560;
+  max-width: 850px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
   border-radius: 8px;
   padding: 20px;
-  background-color: #d5ebd7;
+  background-color: #f2f5f7;
 }
 
 .project-list {
@@ -65,21 +77,35 @@ h1 {
 }
 
 .project-list li {
-  background: #bde2c7;
-  padding: 10px;
+  background: #ffffff;
+  padding: 20px;
   margin: 10px 0;
-  border: 2px solid #538560;
+  border: 2px solid #2c3e50;
   border-radius: 4px;
   text-align: left;
   font-size: 1.2em;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  color: #2c3e50;
 }
 
-.project-list li:hover .project-card {
-  background-color: #85b492;
+.project-list li:hover {
+  background-color: #b0bec5; /* 어두워지는 효과 */
+  transform: scale(1.02);
 }
 
 .project-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-radius: 4px;
+}
+
+.project-name {
+  text-align: left;
+}
+
+.project-date {
+  text-align: right;
 }
 </style>

@@ -1,43 +1,22 @@
 <template>
   <div class="setting">
     <main>
-      <h1>Setting</h1>
-      <form @submit.prevent="submitForm">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" id="username" v-model="username">
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="email">
-        </div>
-        <button type="submit">Save</button>
-      </form>
+      <h1>Setting Page</h1>
+      <p>Configure your settings here.</p>
+      <!-- Add your setting specific content here -->
     </main>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Setting',
-  data() {
-    return {
-      username: '',
-      email: ''
-    }
-  },
-  methods: {
-    submitForm() {
-      console.log('Form submitted:', this.username, this.email);
-    }
-  }
+  name: 'Setting'
 }
 </script>
 
 <style scoped>
 body {
-  background-color: #bde2c7;
-  color: #538560;
+  color: #2c3e50;
   font-family: Arial, sans-serif;
 }
 
@@ -48,42 +27,34 @@ body {
 
 h1 {
   margin-top: 50px;
-  color: #538560;
+  color: #2c3e50;
+  position: relative;
+  padding-bottom: 10px;
 }
 
-form {
-  display: inline-block;
-  text-align: left;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
+h1:after {
+  content: "";
   display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
+  width: 50px;
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0;
 }
 
-.form-group input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border: 2px solid #538560;
+p {
+  font-size: 1.2em;
+  color: #2c3e50;
+  background: #ffffff;
+  padding: 20px;
+  margin: 20px auto;
+  border: 2px solid #2c3e50;
   border-radius: 4px;
+  max-width: 800px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #538560;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #43744a;
+p:hover {
+  transform: none;
+  background-color: #ffffff;
 }
 </style>

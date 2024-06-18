@@ -1,15 +1,13 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from '@/components/Home'
-import Dashboard from '@/components/Dashboard'
-import Setting from '@/components/Setting'
-import History from '@/components/History'
-import ProjectHistory from '@/components/ProjectHistory'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from '@/components/Home.vue';
+import Dashboard from '@/components/Dashboard.vue';
+import History from '@/components/History.vue';
+import Setting from '@/components/Setting.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',
@@ -22,20 +20,14 @@ export default new Router({
       component: Dashboard
     },
     {
-      path: '/setting',
-      name: 'Setting',
-      component: Setting
-    },
-    {
       path: '/history',
       name: 'History',
       component: History
     },
     {
-      path: '/project-history/:projectId',
-      name: 'ProjectHistory',
-      component: ProjectHistory,
-      props: true
+      path: '/setting',
+      name: 'Setting',
+      component: Setting
     }
   ]
-})
+});

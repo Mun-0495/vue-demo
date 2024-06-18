@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard">
     <main>
+      <h1>Dashboard</h1>
       <div class="cards">
         <div class="card">0<br>Portfolio Vulnerabilities</div>
         <div class="card">0<br>Projects at Risk</div>
@@ -40,13 +41,29 @@ export default {
 
 <style scoped>
 body {
-  background-color: #bde2c7;
-  color: #538560;
+  color: #2c3e50;
   font-family: Arial, sans-serif;
 }
 
 .dashboard {
   padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 50px;
+  color: #2c3e50;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+h1:after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0;
 }
 
 .cards {
@@ -55,18 +72,21 @@ body {
 }
 
 .card {
-  background: #bde2c7;
+  background: #ffffff;
   padding: 20px;
   margin: 10px;
   text-align: center;
+  border: 2px solid #2c3e50;
   border-radius: 4px;
   width: 22%;
+  color: #2c3e50;
 }
 
 .chart {
-  background: #bde2c7;
+  background: #ffffff;
   padding: 20px;
   margin-top: 20px;
+  border: 2px solid #2c3e50;
   border-radius: 4px;
 }
 
@@ -76,8 +96,9 @@ body {
 }
 
 .chart-bar {
+  color: #ffffff;
   width: 18%;
-  background: #85b492;
+  background: #2c3e50;
   padding: 10px;
   text-align: center;
   border-radius: 4px;

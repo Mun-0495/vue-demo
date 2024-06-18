@@ -78,12 +78,12 @@ body {
 
 h1 {
   margin-top: 50px;
-  color: #538560;
+  color: #2c3e50;
 }
 
 p {
   font-size: 1.2em;
-  color: #538560;
+  color: #2c3e50;
 }
 
 .file-upload {
