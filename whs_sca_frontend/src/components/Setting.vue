@@ -2,7 +2,7 @@
   <div class="setting">
     <main>
       <h1>Setting Page</h1>
-      <p>Configure your settings here.</p>
+      <p>Configure your settings</p>
       <!-- Add your setting specific content here -->
     </main>
   </div>

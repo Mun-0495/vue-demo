@@ -34,6 +34,9 @@ export default {
   background-color: #2c3e50;
   padding: 20px;
   box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .logo-container {
