@@ -1,94 +1,129 @@
 <template>
   <div class="repo-dashboard">
-    <h1>{{ repoName }} Dashboard</h1>
-    <div class="dashboard-info">
-      <div class="info-box">DASHBOARD INFO</div>
-      <div class="vulnerability-info">
-        <div class="vulnerability-box" v-for="(vuln, index) in vulnerabilities" :key="index">
-          {{ vuln.level }}<br>{{ vuln.count }} ({{ vuln.percentage }}%)
+    <header>
+      <NavBar />
+    </header>
+    <div class="content">
+      <main>
+        <h1>{{ repoName }} Dashboard</h1>
+        <div class="dashboard-info">
+          <div class="info-item" v-for="item in infoItems" :key="item.label">
+            <h2>{{ item.label }}</h2>
+            <p>{{ item.value }}</p>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
-    <div class="details">
-      <div class="detail-section">
-        <h2>Unused Code</h2>
-        <textarea readonly></textarea>
-      </div>
-      <div class="detail-section">
-        <h2>Unused Package</h2>
-        <textarea readonly></textarea>
-      </div>
-      <div class="detail-section">
-        <h2>Inspector</h2>
-        <textarea readonly></textarea>
-      </div>
-    </div>
+    <footer>
+      <p>Projectname v0.1</p>
+    </footer>
   </div>
 </template>
 
 <script>
+import NavBar from './NavBar.vue'; // Adjust the import path if needed
+
 export default {
   name: 'RepoDashboard',
-  props: ['repoName'],
+  components: {
+    NavBar
+  },
+  props: {
+    repoName: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
-      vulnerabilities: [
-        { level: 'Critical', count: 0, percentage: 0 },
-        { level: 'High', count: 0, percentage: 0 },
-        { level: 'Medium', count: 0, percentage: 0 },
-        { level: 'Low', count: 0, percentage: 0 },
-        { level: 'Unassigned', count: 0, percentage: 0 }
+      infoItems: [
+        { label: 'Critical', value: '0 (0%)' },
+        { label: 'High', value: '0 (0%)' },
+        { label: 'Medium', value: '0 (0%)' },
+        { label: 'Low', value: '0 (0%)' },
+        { label: 'Unassigned', value: '0 (0%)' }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
 .repo-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  position: fixed;
+  width: 250px; /* Sidebar width */
+  height: 100%;
+}
+
+.content {
+  margin-left: 250px; /* Sidebar width */
   padding: 20px;
+  background-color: #ecf0f1; /* 배경색 설정 */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+footer {
+  text-align: right;
+  color: #2c3e50;
+  padding: 5px 20px 5px 0; /* Add right padding */
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 250px); /* Adjust for sidebar width */
+  left: 250px; /* Sidebar width */
+  background-color: transparent;
+}
+
+h1 {
+  color: #2c3e50;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+h1:after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0;
 }
 
 .dashboard-info {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.info-box {
+  justify-content: space-around;
   background-color: #2c3e50;
-  color: white;
-  padding: 10px;
   border-radius: 5px;
+  padding: 20px;
+  color: #ffffff;
 }
 
-.vulnerability-info {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.vulnerability-box {
-  background-color: #2c3e50;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
+.info-item {
   text-align: center;
-  flex-grow: 1;
-  margin: 5px;
+  flex: 1;
+  margin: 0 10px;
 }
 
-.details {
-  margin-top: 20px;
+.info-item h2 {
+  font-size: 1.5em;
 }
 
-.detail-section {
-  margin-bottom: 20px;
-}
-
-textarea {
-  width: 100%;
-  height: 100px;
-  resize: none;
+.info-item p {
+  font-size: 1.2em;
 }
 </style>

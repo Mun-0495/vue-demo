@@ -3,18 +3,18 @@
       <main>
         <h1>Settings</h1>
         <div class="setting-item" @click="toggleLicenseFiltering">
-          <div class="setting-button">License Filtering</div>
+          <div class="setting-button"><h3>License Filtering</h3></div>
         </div>
         <div v-if="showLicenseFiltering" class="license-filtering">
           <div class="license-item">
             <div class="license-buttons">
               <div class="license-input">
-                <input v-model="newLicense" placeholder="Enter license name" @keyup.enter="addLicense" />
-                <button class="add-license" @click="addLicense">Add License</button>
+                <input v-model="newLicense" placeholder="Enter license name to include" @keyup.enter="addLicense" />
+                <button class="include-license" @click="addLicense">Include License</button>
               </div>
               <div class="license-input">
-                <input v-model="delLicense" placeholder="Enter license name to delete" @keyup.enter="deleteLicense" />
-                <button class="del-license" @click="deleteLicense">Del License</button>
+                <input v-model="delLicense" placeholder="Enter license name to exclude" @keyup.enter="deleteLicense" />
+                <button class="exclude-license" @click="deleteLicense">Exclude License</button>
               </div>
             </div>
             <div class="license-text">
@@ -29,7 +29,7 @@
         </div>
         <div class="setting-item" @click="toggleCheckbox">
           <div class="setting-button github-notifications">
-            GitHub Issue Notifications Linked
+            <h3>GitHub Issue Notifications Linked</h3>
             <div class="checkbox" :class="{'checked': isCheckboxChecked}">
               <div class="checkmark"></div>
             </div>
@@ -120,6 +120,11 @@
     align-items: center;
   }
   
+  .setting-button h3 {
+    margin: 0;
+    font-weight: bold;
+  }
+  
   .setting-button:hover {
     background-color: #dfe6e9;
   }
@@ -147,7 +152,7 @@
     justify-content: space-between;
   }
   
-  .add-license, .del-license {
+  .include-license, .exclude-license {
     background-color: #2c3e50;
     color: white;
     border: none;
@@ -156,7 +161,7 @@
     cursor: pointer;
   }
   
-  .add-license:hover, .del-license:hover {
+  .include-license:hover, .exclude-license:hover {
     background-color: #34495e;
   }
   
