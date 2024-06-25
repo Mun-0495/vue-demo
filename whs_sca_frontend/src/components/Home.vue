@@ -1,16 +1,23 @@
 <template>
   <div class="home">
-    <main>
-      <h1>Welcome to the 'Project name'</h1>
-      <p>Perform SCA analysis quickly</p>
-      <div class="file-upload"
-           @dragover.prevent="onDragOver"
-           @dragleave.prevent="onDragLeave"
-           @drop.prevent="onDrop">
-        <label for="file-input" class="file-label" :class="{ 'is-dragover': isDragOver }">Upload or Drag & Drop Project</label>
-        <input type="file" id="file-input" webkitdirectory @change="handleFileUpload">
+    <h1>User Name</h1>
+    <div class="repo-list">
+      <div class="repo-card" v-for="repo in repos" :key="repo.name" @click="goToRepoDashboard(repo.name)">
+        <div class="repo-info">
+          <h2>{{ repo.name }}</h2>
+        </div>
+        <div class="repo-status">
+          <div class="status-item">
+            <h3>Vulnerability</h3>
+            <p>{{ repo.vulnerability }}</p>
+          </div>
+          <div class="status-item">
+            <h3>Policy Violation</h3>
+            <p :class="repo.policyViolationClass">{{ repo.policyViolation }}</p>
+          </div>
+        </div>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -19,46 +26,17 @@ export default {
   name: 'Home',
   data() {
     return {
-      isDragOver: false
+      repos: [
+        { name: 'REPO 1', vulnerability: 3, policyViolation: 'No violation', policyViolationClass: 'no-violation' },
+        { name: 'REPO 2', vulnerability: 12, policyViolation: 'Violation', policyViolationClass: 'violation' },
+        { name: 'REPO 3', vulnerability: 0, policyViolation: 'No violation', policyViolationClass: 'no-violation' },
+        { name: 'REPO 4', vulnerability: 125, policyViolation: 'Violation', policyViolationClass: 'violation' }
+      ]
     }
   },
   methods: {
-    handleFileUpload(event) {
-      const files = event.target.files;
-      if (files.length) {
-        Array.from(files).forEach(file => {
-          console.log('File uploaded:', file.name);
-        });
-      }
-    },
-    onDragOver(event) {
-      this.isDragOver = true;
-    },
-    onDragLeave(event) {
-      this.isDragOver = false;
-    },
-    onDrop(event) {
-      this.isDragOver = false;
-      const files = event.dataTransfer.items;
-      for (let i = 0; i < files.length; i++) {
-        if (files[i].webkitGetAsEntry().isDirectory) {
-          this.handleDroppedFolder(files[i].webkitGetAsEntry());
-        }
-      }
-    },
-    handleDroppedFolder(item) {
-      const reader = item.createReader();
-      reader.readEntries(entries => {
-        entries.forEach(entry => {
-          if (entry.isFile) {
-            entry.file(file => {
-              console.log('File dropped:', file.name);
-            });
-          } else if (entry.isDirectory) {
-            this.handleDroppedFolder(entry);
-          }
-        });
-      });
+    goToRepoDashboard(repoName) {
+      this.$router.push({ name: 'RepoDashboard', params: { repoName } });
     }
   }
 }
@@ -66,9 +44,7 @@ export default {
 
 <style scoped>
 body {
-  background-color: #bde2c7;
-  color: #538560;
-  font-family: Arial, sans-serif;
+  background-color: #ecf0f1; /* 배경색 설정 */
 }
 
 .home {
@@ -79,35 +55,80 @@ body {
 h1 {
   margin-top: 50px;
   color: #2c3e50;
-}
-
-p {
-  font-size: 1.2em;
-  color: #2c3e50;
-}
-
-.file-upload {
-  margin-top: 20px;
-  border: 2px dashed #538560;
-  padding: 100px;
-  border-radius: 4px;
   position: relative;
+  padding-bottom: 10px;
 }
 
-.file-label {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #538560;
-  color: #fff;
-  border-radius: 4px;
+h1:after {
+  content: "";
+  display: block;
+  width: 50px; /* 구분선 길이 */
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0;
+}
+
+.repo-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙 정렬 */
+}
+
+.repo-card {
+  border: 2px solid #2c3e50;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* 가로 길이 설정 */
+  max-width: 850px; /* 최대 너비 설정 */
+  transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
 }
 
-.file-label.is-dragover {
-  background-color: #43744a;
+.repo-card:hover {
+  background-color: #dfe6e9;
+  transform: scale(1.02);
 }
 
-input[type="file"] {
-  display: none;
+.repo-info {
+  flex-grow: 1;
+  color: #2c3e50; /* 글씨색 변경 */
+}
+
+.repo-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-item {
+  text-align: center;
+  border: 2px solid #2c3e50;
+  border-radius: 5px;
+  padding: 15px;
+  margin-left: 5px;
+  width: 175px; /* 넓이 설정 */
+  height: 60px; /* 높이 설정 */
+  background-color: #ecf0f1; /* 박스의 배경색 설정 */
+  color: #2c3e50; /* 글씨색 변경 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1; /* 줄 간격 조정 */
+}
+
+h1, h2, h3, p {
+  color: #2c3e50; /* 글씨색 변경 */
+}
+
+.no-violation {
+  color: green;
+}
+
+.violation {
+  color: red;
 }
 </style>

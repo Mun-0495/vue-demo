@@ -1,13 +1,11 @@
 <template>
-  <div class="dashboard">
-    <h1>{{ repoName ? repoName : 'Project Dashboard' }}</h1>
+  <div class="repo-dashboard">
+    <h1>{{ repoName }} Dashboard</h1>
     <div class="dashboard-info">
-      <div class="info-box">
-        DASHBOARD INFO
-        <div class="vulnerability-info">
-          <div class="vulnerability-box" v-for="(vuln, index) in vulnerabilities" :key="index">
-            {{ vuln.level }}<br>{{ vuln.count }} ({{ vuln.percentage }}%)
-          </div>
+      <div class="info-box">DASHBOARD INFO</div>
+      <div class="vulnerability-info">
+        <div class="vulnerability-box" v-for="(vuln, index) in vulnerabilities" :key="index">
+          {{ vuln.level }}<br>{{ vuln.count }} ({{ vuln.percentage }}%)
         </div>
       </div>
     </div>
@@ -30,7 +28,7 @@
 
 <script>
 export default {
-  name: 'Dashboard',
+  name: 'RepoDashboard',
   props: ['repoName'],
   data() {
     return {
@@ -47,31 +45,8 @@ export default {
 </script>
 
 <style scoped>
-body {
-  background-color: #ecf0f1;
-  color: #2c3e50;
-  font-family: Arial, sans-serif;
-}
-
-.dashboard {
+.repo-dashboard {
   padding: 20px;
-  text-align: center;
-}
-
-h1 {
-  color: #2c3e50;
-  margin-top: 50px;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-h1:after {
-  content: "";
-  display: block;
-  width: 50px;
-  height: 2px;
-  background: #2c3e50;
-  margin: 10px auto 0;
 }
 
 .dashboard-info {
@@ -83,26 +58,21 @@ h1:after {
 .info-box {
   background-color: #2c3e50;
   color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 850px;
-  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .vulnerability-info {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
   width: 100%;
 }
 
 .vulnerability-box {
-  background-color: white;
-  color: #2c3e50;
-  border: 2px solid #2c3e50;
+  background-color: #2c3e50;
+  color: white;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   text-align: center;
   flex-grow: 1;
   margin: 5px;
@@ -114,17 +84,11 @@ h1:after {
 
 .detail-section {
   margin-bottom: 20px;
-  color: #2c3e50;
-  text-align: left;
 }
 
 textarea {
   width: 100%;
   height: 100px;
   resize: none;
-  border: 2px solid #2c3e50;
-  border-radius: 10px;
-  background-color: #ffffff;
-  color: #2c3e50;
 }
 </style>

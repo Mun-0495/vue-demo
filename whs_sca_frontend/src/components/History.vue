@@ -6,7 +6,7 @@
         <ul class="project-list">
           <li v-for="project in projects" :key="project.id" @click="goToProjectHistory(project.id)">
             <div class="project-card">
-              <div class="project-name">{{ project.name }}</div>
+              <div class="project-name"><strong>{{ project.name }}</strong></div>
               <div class="project-date">Last analyzed on {{ project.lastAnalyzed }}</div>
             </div>
           </li>
@@ -51,7 +51,7 @@ h1 {
   margin-top: 50px;
   color: #2c3e50;
   position: relative;
-  padding-bottom: 10px; /* 아래쪽 패딩을 줄여서 Project A 부분이 내려가지 않도록 설정 */
+  padding-bottom: 10px;
 }
 
 h1:after {
@@ -60,15 +60,14 @@ h1:after {
   width: 50px;
   height: 2px;
   background: #2c3e50;
-  margin: 10px auto 0; /* 가로선을 조금 아래로 내림 */
+  margin: 10px auto 0;
 }
 
 .project-list-wrapper {
-  max-width: 850px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 850px;
+  margin: 0 auto;
   border-radius: 8px;
   padding: 20px;
-  background-color: #f2f5f7;
 }
 
 .project-list {
@@ -90,7 +89,7 @@ h1:after {
 }
 
 .project-list li:hover {
-  background-color: #b0bec5; /* 어두워지는 효과 */
+  background-color: #b0bec5;
   transform: scale(1.02);
 }
 
