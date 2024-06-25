@@ -4,10 +4,20 @@
       <h1>History</h1>
       <div class="project-list-wrapper">
         <ul class="project-list">
-          <li v-for="project in projects" :key="project.id" @click="goToProjectHistory(project.id)">
+          <li v-for="project in projects" :key="project.id" @click="toggleProjectInfo(project.id)">
             <div class="project-card">
               <div class="project-name"><strong>{{ project.name }}</strong></div>
               <div class="project-date">Last analyzed on {{ project.lastAnalyzed }}</div>
+            </div>
+            <div v-if="project.id === activeProjectId" class="project-info">
+              <div class="dashboard-info">
+                <div class="info-box">PROJECT SUMMARIZE</div>
+                <div class="vulnerability-info">
+                  <div class="vulnerability-box" v-for="(vuln, index) in vulnerabilities" :key="index">
+                    {{ vuln.level }}<br>{{ vuln.count }} ({{ vuln.percentage }}%)
+                  </div>
+                </div>
+              </div>
             </div>
           </li>
         </ul>
@@ -25,12 +35,20 @@ export default {
         { id: 1, name: 'Project A', lastAnalyzed: '2024-06-15' },
         { id: 2, name: 'Project B', lastAnalyzed: '2024-06-14' },
         { id: 3, name: 'Project C', lastAnalyzed: '2024-06-13' }
+      ],
+      activeProjectId: null,
+      vulnerabilities: [
+        { level: 'Critical', count: 0, percentage: 0 },
+        { level: 'High', count: 0, percentage: 0 },
+        { level: 'Medium', count: 0, percentage: 0 },
+        { level: 'Low', count: 0, percentage: 0 },
+        { level: 'Unassigned', count: 0, percentage: 0 }
       ]
     }
   },
   methods: {
-    goToProjectHistory(projectId) {
-      this.$router.push(`/project-history/${projectId}`)
+    toggleProjectInfo(projectId) {
+      this.activeProjectId = this.activeProjectId === projectId ? null : projectId;
     }
   }
 }
@@ -106,5 +124,41 @@ h1:after {
 
 .project-date {
   text-align: right;
+}
+
+.project-info {
+  background: #ecf0f1;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.dashboard-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-box {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.vulnerability-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.vulnerability-box {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  flex-grow: 1;
+  margin: 5px;
 }
 </style>

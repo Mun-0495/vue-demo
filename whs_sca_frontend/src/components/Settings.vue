@@ -7,12 +7,24 @@
         </div>
         <div v-if="showLicenseFiltering" class="license-filtering">
           <div class="license-item">
-            <button class="add-license">Add License</button>
-            <div class="license">MIT license, Apache License 2.0</div>
-          </div>
-          <div class="license-item">
-            <button class="del-license">Del License</button>
-            <div class="license">AGPL-3.0 license</div>
+            <div class="license-buttons">
+              <div class="license-input">
+                <input v-model="newLicense" placeholder="Enter license name" @keyup.enter="addLicense" />
+                <button class="add-license" @click="addLicense">Add License</button>
+              </div>
+              <div class="license-input">
+                <input v-model="delLicense" placeholder="Enter license name to delete" @keyup.enter="deleteLicense" />
+                <button class="del-license" @click="deleteLicense">Del License</button>
+              </div>
+            </div>
+            <div class="license-text">
+              <div class="license-add">
+                <textarea readonly :value="addLicenses.join('\n')"></textarea>
+              </div>
+              <div class="license-del">
+                <textarea readonly :value="delLicenses.join('\n')"></textarea>
+              </div>
+            </div>
           </div>
         </div>
         <div class="setting-item" @click="toggleCheckbox">
@@ -34,6 +46,10 @@
       return {
         showLicenseFiltering: false,
         isCheckboxChecked: false,
+        newLicense: '',
+        delLicense: '',
+        addLicenses: ['MIT license', 'Apache License 2.0'],
+        delLicenses: ['AGPL-3.0 license'],
       };
     },
     methods: {
@@ -42,6 +58,18 @@
       },
       toggleCheckbox() {
         this.isCheckboxChecked = !this.isCheckboxChecked;
+      },
+      addLicense() {
+        if (this.newLicense && !this.addLicenses.includes(this.newLicense)) {
+          this.addLicenses.push(this.newLicense);
+          this.newLicense = '';
+        }
+      },
+      deleteLicense() {
+        if (this.delLicense && !this.delLicenses.includes(this.delLicense)) {
+          this.delLicenses.push(this.delLicense);
+          this.delLicense = '';
+        }
       },
     },
   };
@@ -75,7 +103,6 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    font-weight: bold; /* bold 처리 */
   }
   
   .setting-button {
@@ -111,9 +138,13 @@
   
   .license-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     margin-top: 10px;
-    height: 60px; /* 높이 두 배로 설정 */
+  }
+  
+  .license-buttons {
+    display: flex;
+    justify-content: space-between;
   }
   
   .add-license, .del-license {
@@ -129,14 +160,46 @@
     background-color: #34495e;
   }
   
-  .license {
-    margin-left: 10px;
+  .license-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .license-add, .license-del {
+    width: calc(50% - 20px); /* 너비를 정확히 50%로 설정하고 간격을 맞춤 */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .license-input {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 48%;
+  }
+  
+  .license-input input {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+    resize: vertical; /* 세로로만 스크롤 가능 */
+    padding: 2px;
+    border: 2px solid #2c3e50;
+    border-radius: 5px;
+    background-color: #ecf0f1; /* 텍스트영역의 배경색 설정 */
+    color: #2c3e50; /* 텍스트영역의 글씨색 설정 */
+    overflow-y: auto; /* 세로 스크롤 */
+    margin-top: 10px;
   }
   
   .github-notifications {
     justify-content: space-between;
     width: 100%;
-    font-weight: bold; /* bold 처리 */
   }
   
   .checkbox {
