@@ -7,10 +7,12 @@
           <span class="project-name">ProjectName</span>
         </router-link>
       </div>
+      <hr class="divider">
       <ul>
+        <li><router-link to="/" class="nav-link">Home</router-link></li>
         <li><router-link to="/dashboard" class="nav-link">Dashboard</router-link></li>
         <li><router-link to="/history" class="nav-link">History</router-link></li>
-        <li><router-link to="/setting" class="nav-link">Setting</router-link></li>
+        <li><router-link to="/settings" class="nav-link">Settings</router-link></li>
       </ul>
     </nav>
   </div>
@@ -35,8 +37,6 @@ export default {
   padding: 20px;
   box-sizing: border-box;
   position: fixed;
-  top: 0;
-  left: 0;
 }
 
 .logo-container {
@@ -61,6 +61,11 @@ export default {
 .project-name {
   font-size: 20px;
   font-weight: bold;
+}
+
+.divider {
+  border-top: 1px solid #ecf0f1;
+  margin: 20px 0;
 }
 
 .sidebar ul {

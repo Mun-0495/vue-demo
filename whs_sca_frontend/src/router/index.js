@@ -1,33 +1,31 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import Home from '@/components/Home.vue';
-import Dashboard from '@/components/Dashboard.vue';
-import History from '@/components/History.vue';
-import Setting from '@/components/Setting.vue';
+import App from './App.vue';
+import VueRouter from 'vue-router';
+import Dashboard from './components/Dashboard.vue';
+import RepoDashboard from './components/Repo_dashboard.vue'; // 변경된 파일명으로 업데이트
+import Home from './components/Home.vue';
+import History from './components/History.vue';
+import Settings from './components/Settings.vue';
+import ProjectHistory from './components/ProjectHistory.vue';
 
-Vue.use(Router);
+Vue.config.productionTip = false;
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: Dashboard
-    },
-    {
-      path: '/history',
-      name: 'History',
-      component: History
-    },
-    {
-      path: '/setting',
-      name: 'Setting',
-      component: Setting
-    }
-  ]
+Vue.use(VueRouter);
+
+const routes = [
+  { path: '/', component: Home },
+  { path: '/dashboard', component: Dashboard },
+  { path: '/repo-dashboard/:repoName', name: 'RepoDashboard', component: RepoDashboard, props: true }, // 변경된 파일명으로 업데이트
+  { path: '/history', component: History },
+  { path: '/settings', component: Settings },
+  { path: '/project-history/:projectId', component: ProjectHistory, props: true }
+];
+
+const router = new VueRouter({
+  routes
 });
+
+new Vue({
+  render: h => h(App),
+  router
+}).$mount('#app');
