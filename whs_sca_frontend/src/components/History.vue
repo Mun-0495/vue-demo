@@ -11,10 +11,22 @@
             </div>
             <div v-if="project.id === activeProjectId" class="project-info">
               <div class="dashboard-info">
-                <div class="info-box">PROJECT SUMMARIZE</div>
+                <div class="info-title">PROJECT SUMMARIZE</div>
                 <div class="vulnerability-info">
-                  <div class="vulnerability-box" v-for="(vuln, index) in vulnerabilities" :key="index">
-                    {{ vuln.level }}<br>{{ vuln.count }} ({{ vuln.percentage }}%)
+                  <div class="vulnerability-box">
+                    <span class="critical">CRITICAL</span><br><span class="percentage">0%</span>
+                  </div>
+                  <div class="vulnerability-box">
+                    <span class="high">HIGH</span><br><span class="percentage">0%</span>
+                  </div>
+                  <div class="vulnerability-box">
+                    <span class="medium">MEDIUM</span><br><span class="percentage">0%</span>
+                  </div>
+                  <div class="vulnerability-box">
+                    <span class="low">LOW</span><br><span class="percentage">0%</span>
+                  </div>
+                  <div class="vulnerability-box">
+                    <span class="unassigned">UNASSIGNED</span><br><span class="percentage">0%</span>
                   </div>
                 </div>
               </div>
@@ -37,13 +49,6 @@ export default {
         { id: 3, name: 'Project C', lastAnalyzed: '2024-06-13' }
       ],
       activeProjectId: null,
-      vulnerabilities: [
-        { level: 'Critical', count: 0, percentage: 0 },
-        { level: 'High', count: 0, percentage: 0 },
-        { level: 'Medium', count: 0, percentage: 0 },
-        { level: 'Low', count: 0, percentage: 0 },
-        { level: 'Unassigned', count: 0, percentage: 0 }
-      ]
     }
   },
   methods: {
@@ -127,7 +132,6 @@ h1:after {
 }
 
 .project-info {
-  background: #ecf0f1;
   padding: 20px;
   margin-top: 10px;
   border-radius: 4px;
@@ -139,11 +143,9 @@ h1:after {
   align-items: center;
 }
 
-.info-box {
-  background-color: #2c3e50;
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
+.info-title {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .vulnerability-info {
@@ -153,12 +155,41 @@ h1:after {
 }
 
 .vulnerability-box {
-  background-color: #2c3e50;
-  color: white;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
   flex-grow: 1;
   margin: 5px;
+  background-color: #2c3e50; /* 모든 박스의 배경색 설정 */
+  color: white;
+  width: calc(100% / 5 - 10px); /* 가로 길이 통일 */
+}
+
+.critical, .high, .medium, .low, .unassigned {
+  font-size: 0.7em; /* 글씨 크기 줄이기 */
+}
+
+.percentage {
+  font-size: 0.6em; /* 퍼센트 글씨 크기 줄이기 */
+}
+
+.critical {
+  color: #ff4d4d; /* 붉은색 */
+}
+
+.high {
+  color: #ffa500; /* 주황색 */
+}
+
+.medium {
+  color: #ffd700; /* 황금색 */
+}
+
+.low {
+  color: #9370db; /* 파란색 */
+}
+
+.unassigned {
+  color: #32cd32; /* 초록색 */
 }
 </style>
