@@ -8,11 +8,11 @@
     <div class="content">
       <div class="unused-list">
         <h2>Unused Import List</h2>
-        <textarea readonly></textarea>
+        <textarea readonly>{{ project.unused_import_list.join('\n') }}</textarea>
       </div>
       <div class="unused-list">
         <h2>Unused Package</h2>
-        <textarea readonly></textarea>
+        <textarea readonly>{{ project.unused_package.join('\n') }}</textarea>
       </div>
       <div class="dependency-list">
         <h2>Dependency List</h2>
@@ -23,28 +23,28 @@
               <div class="status-header">
                 <div class="status-box">
                   <span class="vuln-title">Vulnerability</span>
-                  <span class="vuln-value">{{ project.vulnerabilities }}</span>
+                  <span class="vuln-value">{{ project.dependency_list.before.vuln_lists.length }}</span>
                 </div>
                 <div class="status-box">
                   <span class="cvss-title">CVSS score</span>
-                  <span class="cvss-value">{{ project.cvssScore }}</span>
+                  <span class="cvss-value">{{ project.dependency_list.before.cvss }}</span>
                 </div>
               </div>
               <div class="severity-counts">
                 <div class="severity-item">
-                  <div class="severity-box critical">critical<br>{{ project.critical }}</div>
+                  <div class="severity-box critical">critical<br>{{ countSeverity(project.dependency_list.before.vuln_lists, 'Critical') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box high">high<br>{{ project.high }}</div>
+                  <div class="severity-box high">high<br>{{ countSeverity(project.dependency_list.before.vuln_lists, 'High') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box medium">medium<br>{{ project.medium }}</div>
+                  <div class="severity-box medium">medium<br>{{ countSeverity(project.dependency_list.before.vuln_lists, 'Medium') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box low">low<br>{{ project.low }}</div>
+                  <div class="severity-box low">low<br>{{ countSeverity(project.dependency_list.before.vuln_lists, 'Low') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box unassigned">unassigned<br>{{ project.unassigned }}</div>
+                  <div class="severity-box unassigned">unassigned<br>{{ countSeverity(project.dependency_list.before.vuln_lists, 'Unassigned') }}</div>
                 </div>
               </div>
             </div>
@@ -58,10 +58,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="component in project.components" :key="component.name">
-                  <td>{{ component.name }}</td>
-                  <td>{{ component.version }}</td>
-                  <td><a :href="component.vulnerabilityLink">{{ component.vulnerability }}</a></td>
+                <tr v-for="component in project.dependency_list.before.vuln_lists" :key="component.component_name">
+                  <td>{{ component.component_name }}</td>
+                  <td>{{ component.ver }}</td>
+                  <td><a :href="component.vulnerability_code">{{ component.vulnerability_code }}</a></td>
                   <td>{{ component.severity }}</td>
                 </tr>
               </tbody>
@@ -73,28 +73,28 @@
               <div class="status-header">
                 <div class="status-box">
                   <span class="vuln-title">Vulnerability</span>
-                  <span class="vuln-value">{{ project.vulnerabilities }}</span>
+                  <span class="vuln-value">{{ project.dependency_list.after.vuln_lists.length }}</span>
                 </div>
                 <div class="status-box">
                   <span class="cvss-title">CVSS score</span>
-                  <span class="cvss-value">{{ project.cvssScore }}</span>
+                  <span class="cvss-value">{{ project.dependency_list.after.cvss }}</span>
                 </div>
               </div>
               <div class="severity-counts">
                 <div class="severity-item">
-                  <div class="severity-box critical">critical<br>{{ project.critical }}</div>
+                  <div class="severity-box critical">critical<br>{{ countSeverity(project.dependency_list.after.vuln_lists, 'Critical') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box high">high<br>{{ project.high }}</div>
+                  <div class="severity-box high">high<br>{{ countSeverity(project.dependency_list.after.vuln_lists, 'High') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box medium">medium<br>{{ project.medium }}</div>
+                  <div class="severity-box medium">medium<br>{{ countSeverity(project.dependency_list.after.vuln_lists, 'Medium') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box low">low<br>{{ project.low }}</div>
+                  <div class="severity-box low">low<br>{{ countSeverity(project.dependency_list.after.vuln_lists, 'Low') }}</div>
                 </div>
                 <div class="severity-item">
-                  <div class="severity-box unassigned">unassigned<br>{{ project.unassigned }}</div>
+                  <div class="severity-box unassigned">unassigned<br>{{ countSeverity(project.dependency_list.after.vuln_lists, 'Unassigned') }}</div>
                 </div>
               </div>
             </div>
@@ -108,10 +108,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="component in project.components" :key="component.name">
-                  <td>{{ component.name }}</td>
-                  <td>{{ component.version }}</td>
-                  <td><a :href="component.vulnerabilityLink">{{ component.vulnerability }}</a></td>
+                <tr v-for="component in project.dependency_list.after.vuln_lists" :key="component.component_name">
+                  <td>{{ component.component_name }}</td>
+                  <td>{{ component.ver }}</td>
+                  <td><a :href="component.vulnerability_code">{{ component.vulnerability_code }}</a></td>
                   <td>{{ component.severity }}</td>
                 </tr>
               </tbody>
@@ -129,30 +129,42 @@ export default {
   props: ['repoName'],
   data() {
     return {
-      projects: [
-        { id: 1, name: 'Project A', vulnerabilities: 3, cvssScore: 16, critical: 0, high: 0, medium: 0, low: 0, unassigned: 0,
-          components: [
-            { name: 'Component A', version: '1.1.0', vulnerability: 'CVE-1238', vulnerabilityLink: '#', severity: 'high' },
-            { name: 'Component B', version: '1.2.0', vulnerability: 'CVE-1212', vulnerabilityLink: '#', severity: 'unassigned' }
-          ]
-        },
-        { id: 2, name: 'Project B', vulnerabilities: 2, cvssScore: 12, critical: 0, high: 0, medium: 0, low: 0, unassigned: 0,
-          components: [
-            { name: 'Component C', version: '1.0.0', vulnerability: 'CVE-2345', vulnerabilityLink: '#', severity: 'medium' },
-            { name: 'Component D', version: '1.1.0', vulnerability: 'CVE-3456', vulnerabilityLink: '#', severity: 'low' }
-          ]
-        },
-        { id: 3, name: 'Project C', vulnerabilities: 1, cvssScore: 8, critical: 0, high: 0, medium: 0, low: 0, unassigned: 0,
-          components: [
-            { name: 'Component E', version: '1.2.0', vulnerability: 'CVE-4567', vulnerabilityLink: '#', severity: 'low' }
-          ]
+      project: {
+        name: '',
+        unused_import_list: [],
+        unused_package: [],
+        dependency_list: {
+          before: {
+            cvss: 0,
+            vuln_lists: []
+          },
+          after: {
+            cvss: 0,
+            vuln_lists: []
+          }
         }
-      ],
-      project: {}
+      }
     };
   },
   created() {
-    this.project = this.projects.find(p => p.name === this.repoName);
+    this.fetchProjectData();
+  },
+  methods: {
+    async fetchProjectData() {
+      try {
+        const response = await fetch(`http://113.198.229.153:107/api/project/${this.repoName}/code`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch project data');
+        }
+        const data = await response.json();
+        this.project = data;
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    },
+    countSeverity(vulnLists, severity) {
+      return vulnLists.filter(vul => vul.severity === severity).length;
+    }
   }
 };
 </script>

@@ -2,13 +2,25 @@
   <div class="repository">
     <h1>Project</h1>
     <div class="repo-list">
-      <div class="repo-card" v-for="repo in repos" :key="repo.name" @click="goToCodeDashboard(repo.name)">
+      <div class="repo-card" v-for="repo in repos" :key="repo.id" @click="goToCodeDashboard(repo.name)">
         <div class="repo-info">
           <h2>{{ repo.name }}</h2>
           <p>ver. {{ repo.version }}</p>
         </div>
-        <div class="repo-date">{{ repo.lastAnalyzed }}</div>
+        <div class="repo-date">{{ repo.date }}</div>
       </div>
+    </div>
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">&lt;</button>
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        @click="goToPage(page)"
+        :class="{ active: page === currentPage }"
+      >
+        {{ page }}
+      </button>
+      <button @click="nextPage" :disabled="currentPage === totalPages">&gt;</button>
     </div>
   </div>
 </template>
@@ -18,38 +30,50 @@ export default {
   name: 'Project',
   data() {
     return {
-      repos: [
-        {
-          name: 'Project A',
-          version: '1.0.0',
-          lastAnalyzed: '2024-06-29'
-        },
-        {
-          name: 'Project B',
-          version: '1.2.1',
-          lastAnalyzed: '2024-06-17'
-        },
-        {
-          name: 'Project C',
-          version: '1.2.0',
-          lastAnalyzed: '2024-03-11'
-        },
-        {
-          name: 'Project D',
-          version: '1.0.1',
-          lastAnalyzed: '2023-12-30'
-        },
-        {
-          name: 'Project E',
-          version: '1.2.0',
-          lastAnalyzed: '2023-06-29'
-        }
-      ]
+      repos: [],
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalPages: 1
     };
   },
+  created() {
+    this.fetchProjects();
+  },
   methods: {
+    async fetchProjects() {
+      console.log(`Fetching projects for page ${this.currentPage}`);
+      try {
+        const response = await fetch(`http://113.198.229.153:107/api/project/?page=${this.currentPage}&cnt_per_page=${this.itemsPerPage}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const data = await response.json();
+        console.log('Fetched data:', data);
+        this.repos = data.projects;
+        this.totalPages = data.sum_of_page;
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    },
     goToCodeDashboard(repoName) {
       this.$router.push({ name: 'CodeDashboard', params: { repoName } });
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchProjects();
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.fetchProjects();
+      }
+    },
+    goToPage(page) {
+      console.log(`Navigating to page ${page}`);
+      this.currentPage = page;
+      this.fetchProjects();
     }
   }
 };
@@ -99,7 +123,7 @@ h1:after {
   width: 100%; /* 가로 길이 설정 */
   max-width: 850px; /* 최대 너비 설정 */
   transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
+  cursor: pointer; /* 클릭 커서 설정 */
 }
 
 .repo-card:hover {
@@ -124,5 +148,28 @@ h1:after {
 
 .repo-date {
   color: #bdc3c7; /* 날짜 글씨색 변경 */
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.pagination button {
+  border: none;
+  background-color: transparent;
+  color: #2c3e50;
+  margin: 0 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.pagination button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.pagination button:disabled {
+  color: #bdc3c7;
+  cursor: not-allowed;
 }
 </style>

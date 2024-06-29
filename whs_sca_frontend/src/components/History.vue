@@ -4,7 +4,7 @@
       <h1>History</h1>
       <div class="project-list-wrapper">
         <ul class="project-list">
-          <li v-for="project in projects" :key="project.id" @click="goToHistory2(project.id)">
+          <li v-for="project in projects" :key="project.id" @click="goToHistory2(project.name)">
             <div class="project-card">
               <div class="project-name"><strong>{{ project.name }}</strong></div>
               <div class="project-date">Last analyzed on {{ project.lastAnalyzed }}</div>
@@ -21,19 +21,30 @@ export default {
   name: 'History',
   data() {
     return {
-      projects: [
-        { id: 1, name: '123', lastAnalyzed: '2024-06-15' },
-        { id: 2, name: 'asdf', lastAnalyzed: '2024-06-14' },
-        { id: 3, name: 'asdgasgd', lastAnalyzed: '2024-06-13' }
-      ],
-    }
+      projects: []
+    };
   },
   methods: {
-    goToHistory2(projectId) {
-      this.$router.push({ name: 'History2', params: { projectId } });
+    async fetchProjects() {
+      try {
+        const response = await fetch(`http://113.198.229.153:107/api/project/`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const data = await response.json();
+        this.projects = data.projects;
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    },
+    goToHistory2(projectName) {
+      this.$router.push({ name: 'History2', params: { projectName } });
     }
+  },
+  created() {
+    this.fetchProjects();
   }
-}
+};
 </script>
 
 <style scoped>
