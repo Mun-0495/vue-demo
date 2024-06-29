@@ -9,10 +9,10 @@
       </div>
       <hr class="divider">
       <ul>
-        <li><router-link to="/" class="nav-link">Home</router-link></li>
-        <li><router-link to="/dashboard" class="nav-link">Dashboard</router-link></li>
+        <li><router-link to="/" class="nav-link">Repository</router-link></li>
+        <li><router-link to="/server" class="nav-link">Server</router-link></li>
         <li><router-link to="/history" class="nav-link">History</router-link></li>
-        <li><router-link to="/settings" class="nav-link">Settings</router-link></li>
+        <li><router-link to="/license" class="nav-link">License</router-link></li>
       </ul>
     </nav>
   </div>
