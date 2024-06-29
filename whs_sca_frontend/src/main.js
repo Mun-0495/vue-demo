@@ -1,20 +1,22 @@
 import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router';
-import Server from './components/Server.vue';
+import ServerDashboard from './components/ServerDashboard.vue';
+import CodeDashboard from './components/CodeDashboard.vue';
 import History from './components/History.vue';
-import License from './components/License.vue'; // 새로 추가된 설정 페이지
-import Repository from './components/Repository.vue';
+import History2 from './components/History2.vue'; // History2 import 추가
+import Project from './components/Project.vue';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/', component: Repository },
-  { path: '/server', component: Server},
+  { path: '/', component: Project },
+  { path: '/serverdashboard/:repoName', name: 'ServerDashboard', component: ServerDashboard, props: true },
+  { path: '/codedashboard/:repoName', name: 'CodeDashboard', component: CodeDashboard, props: true },
   { path: '/history', component: History },
-  { path: '/license', component: License } // 새로 추가된 설정 페이지 라우트
+  { path: '/history/:projectId', name: 'History2', component: History2, props: true } // History2 route 추가
 ];
 
 const router = new VueRouter({

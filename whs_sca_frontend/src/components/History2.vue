@@ -1,0 +1,280 @@
+<template>
+  <div class="history-detail">
+    <main>
+      <h1>{{ project.name }}</h1>
+      <div class="project-summary">
+        <p>Last analyzed on {{ project.lastAnalyzed }}</p>
+      </div>
+      <div class="dashboard-info">
+        <div class="info-title">PROJECT SUMMARIZE (ver.{{ mostRecentVersion.version }})</div>
+        <canvas id="vulnerabilityChart"></canvas>
+        <div class="vulnerability-info">
+          <div class="vulnerability-box">
+            <span class="critical">CRITICAL</span><br><span class="percentage">{{ mostRecentVersion.critical }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="high">HIGH</span><br><span class="percentage">{{ mostRecentVersion.high }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="medium">MEDIUM</span><br><span class="percentage">{{ mostRecentVersion.medium }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="low">LOW</span><br><span class="percentage">{{ mostRecentVersion.low }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="unassigned">UNASSIGNED</span><br><span class="percentage">{{ mostRecentVersion.unassigned }}</span>
+          </div>
+        </div>
+      </div>
+      <div v-for="(version, index) in previousVersions" :key="index" class="previous-version">
+        <div class="version-header">
+          <span>ver.{{ version.version }}</span>
+        </div>
+        <div class="vulnerability-info">
+          <div class="vulnerability-box">
+            <span class="critical">CRITICAL</span><br><span class="percentage">{{ version.critical }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="high">HIGH</span><br><span class="percentage">{{ version.high }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="medium">MEDIUM</span><br><span class="percentage">{{ version.medium }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="low">LOW</span><br><span class="percentage">{{ version.low }}</span>
+          </div>
+          <div class="vulnerability-box">
+            <span class="unassigned">UNASSIGNED</span><br><span class="percentage">{{ version.unassigned }}</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script>
+import { Line, Chart } from 'chart.js';
+import { onMounted } from 'vue';
+
+export default {
+  name: 'History2',
+  props: ['projectId'],
+  data() {
+    return {
+      projects: [
+        {
+          id: 1,
+          name: 'Project A',
+          lastAnalyzed: '2024-06-15',
+          previousVersions: [
+            { version: '1.3.0', critical: 1, high: 0, medium: 0, low: 0, unassigned: 0 },
+            { version: '1.2.5', critical: 2, high: 0, medium: 0, low: 0, unassigned: 0 },
+            { version: '1.2.4', critical: 3, high: 0, medium: 0, low: 0, unassigned: 0 }
+          ]
+        },
+        {
+          id: 2,
+          name: 'Project B',
+          lastAnalyzed: '2024-06-14',
+          previousVersions: [
+            { version: '1.1.0', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 },
+            { version: '1.0.5', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 }
+          ]
+        },
+        {
+          id: 3,
+          name: 'Project C',
+          lastAnalyzed: '2024-06-13',
+          previousVersions: [
+            { version: '2.0.0', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 },
+            { version: '1.9.5', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 }
+          ]
+        }
+      ],
+      project: {},
+      mostRecentVersion: {},
+      previousVersions: []
+    };
+  },
+  created() {
+    this.project = this.projects.find(p => p.id == this.projectId);
+    if (this.project) {
+      this.previousVersions = this.project.previousVersions.reverse();
+      this.mostRecentVersion = this.previousVersions[0];
+    }
+  },
+  mounted() {
+    this.renderChart();
+  },
+  methods: {
+    renderChart() {
+      const ctx = document.getElementById('vulnerabilityChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: this.previousVersions.map(version => `ver.${version.version}`),
+          datasets: [
+            {
+              label: 'Critical',
+              data: this.previousVersions.map(version => version.critical),
+              borderColor: '#ff4d4d',
+              fill: false
+            },
+            {
+              label: 'High',
+              data: this.previousVersions.map(version => version.high),
+              borderColor: '#ffa500',
+              fill: false
+            },
+            {
+              label: 'Medium',
+              data: this.previousVersions.map(version => version.medium),
+              borderColor: '#ffd700',
+              fill: false
+            },
+            {
+              label: 'Low',
+              data: this.previousVersions.map(version => version.low),
+              borderColor: '#9370db',
+              fill: false
+            },
+            {
+              label: 'Unassigned',
+              data: this.previousVersions.map(version => version.unassigned),
+              borderColor: '#32cd32',
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              beginAtZero: true
+            },
+            y: {
+              beginAtZero: true,
+              suggestedMin: 0 // 0 이하 값 없애기
+            }
+          }
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style scoped>
+body {
+  color: #2c3e50;
+  font-family: Arial, sans-serif;
+}
+
+.history-detail {
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 50px;
+  color: #2c3e50;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+h1:after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 2px;
+  background: #2c3e50;
+  margin: 10px auto 0;
+}
+
+.project-summary {
+  margin-top: 20px;
+}
+
+.dashboard-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border: 2px solid #2c3e50; /* 테두리 색상 설정 */
+  border-radius: 10px; /* 둥근 모서리 설정 */
+  padding: 20px; /* 내부 여백 설정 */
+  position: relative; /* 그래프 위치를 위해 추가 */
+}
+
+canvas {
+  margin-bottom: 20px;
+  height: 400px !important; /* 그래프 세로 길이를 줄이기 */
+}
+
+.info-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.vulnerability-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.vulnerability-box {
+  padding: 10px;
+  border-radius: 30px;
+  text-align: center;
+  flex-grow: 1;
+  margin: 5px;
+  background-color: #2c3e50; /* 모든 박스의 배경색 설정 */
+  color: white;
+  width: calc(100% / 5 - 20px); /* 가로 길이 통일 */
+}
+
+.critical, .high, .medium, .low, .unassigned {
+  font-size: 1.0em; /* 글씨 크기 줄이기 */
+}
+
+.percentage {
+  font-size: 0.8em; /* 퍼센트 글씨 크기 줄이기 */
+}
+
+.critical {
+  color: #ff4d4d; /* 붉은색 */
+}
+
+.high {
+  color: #ffa500; /* 주황색 */
+}
+
+.medium {
+  color: #ffd700; /* 황금색 */
+}
+
+.low {
+  color: #9370db; /* 파란색 */
+}
+
+.unassigned {
+  color: #32cd32; /* 초록색 */
+}
+
+.previous-version {
+  margin-top: 20px;
+  background-color: #ffffff;
+  border: 2px solid #2c3e50;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.version-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
+}
+</style>

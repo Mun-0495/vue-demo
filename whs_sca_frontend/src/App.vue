@@ -3,8 +3,10 @@
     <header>
       <NavBar />
     </header>
-    <div class="content">
-      <router-view />
+    <div class="content-wrapper">
+      <div class="content">
+        <router-view />
+      </div>
     </div>
     <footer>
       <p>Projectname v0.1</p>
@@ -38,13 +40,15 @@ header {
   height: 100%;
 }
 
-.content {
+.content-wrapper {
   margin-left: 250px; /* Sidebar width */
   padding: 20px;
   background-color: #ecf0f1; /* 배경색 설정 */
   min-height: calc(100vh - 40px); /* Adjust for footer height */
   display: flex;
   flex-direction: column;
+  width: calc(100% - 250px); /* Adjust for sidebar width */
+  box-sizing: border-box;
 }
 
 main {

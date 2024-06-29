@@ -1,8 +1,8 @@
 <template>
   <div class="repository">
-    <h1>Repository</h1>
+    <h1>Project</h1>
     <div class="repo-list">
-      <div class="repo-card" v-for="repo in repos" :key="repo.name" @click="goToRepoDashboard(repo.name)">
+      <div class="repo-card" v-for="repo in repos" :key="repo.name" @click="goToCodeDashboard(repo.name)">
         <div class="repo-info">
           <h2>{{ repo.name }}</h2>
           <p>ver. {{ repo.version }}</p>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'Repository',
+  name: 'Project',
   data() {
     return {
       repos: [
@@ -48,8 +48,8 @@ export default {
     };
   },
   methods: {
-    goToRepoDashboard(repoName) {
-      this.$router.push({ name: 'RepoDashboard', params: { repoName } });
+    goToCodeDashboard(repoName) {
+      this.$router.push({ name: 'CodeDashboard', params: { repoName } });
     }
   }
 };
