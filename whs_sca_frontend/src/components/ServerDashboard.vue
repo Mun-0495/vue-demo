@@ -17,7 +17,9 @@
           <div v-for="(vulnerability, index) in paginatedVulnerabilities" :key="index" class="vulnerability-row">
             <div class="vulnerability-cell">{{ vulnerability.title }}</div>
             <div class="vulnerability-cell">{{ vulnerability.description }}</div>
-            <div class="vulnerability-cell">{{ vulnerability.affectedPackages }}</div>
+            <div class="vulnerability-cell">
+              <div v-for="pkg in vulnerability.affectedPackages" :key="pkg">{{ pkg }}</div>
+            </div>
             <div class="vulnerability-cell">{{ vulnerability.recommendation }}</div>
           </div>
         </div>
@@ -37,26 +39,12 @@ export default {
   props: ['repoName'],
   data() {
     return {
-      projects: [
-        {
-          name: 'Project A',
-          vulnerabilities: [
-            { title: 'CVE-2021-0001', description: 'Description of the vulnerability', affectedPackages: 'xz-utils', recommendation: 'Update to version 5.2.3 or later' },
-            { title: 'CVE-2021-3449', description: 'Description of the vulnerability', affectedPackages: 'openssl', recommendation: 'Update to version 1.1.1 or later' }
-          ]
-        },
-        {
-          name: 'Project B',
-          vulnerabilities: [
-            { title: 'CVE-2022-0001', description: 'Description of the vulnerability', affectedPackages: 'pkg-utils', recommendation: 'Update to version 6.2.3 or later' },
-            { title: 'CVE-2022-3449', description: 'Description of the vulnerability', affectedPackages: 'ssl-utils', recommendation: 'Update to version 2.1.1 or later' }
-          ]
-        },
-        // 더 많은 프로젝트 데이터 추가 가능
-      ],
+      project: {
+        name: '',
+        vulnerabilities: []
+      },
       currentPage: 1,
-      itemsPerPage: 10,
-      project: {}
+      itemsPerPage: 10
     };
   },
   computed: {
@@ -78,19 +66,33 @@ export default {
       }
 
       if (startPage > 1) {
-        pages.unshift('...');
         pages.unshift(1);
+        if (startPage > 2) pages.splice(1, 0, '...');
       }
 
       if (endPage < this.totalPages) {
-        pages.push('...');
         pages.push(this.totalPages);
+        if (endPage < this.totalPages - 1) pages.splice(pages.length - 1, 0, '...');
       }
 
       return pages;
     }
   },
   methods: {
+    async fetchProjectData() {
+      try {
+        const projectId = this.$route.params.repoName;
+        const response = await fetch(`http://113.198.229.153:107/api/project/${projectId}/server`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch project data');
+        }
+        const data = await response.json();
+        this.project.name = data.name;
+        this.project.vulnerabilities = data.findings;
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    },
     setPage(page) {
       if (page === '...') return;
       this.currentPage = page;
@@ -107,7 +109,7 @@ export default {
     }
   },
   created() {
-    this.project = this.projects.find(p => p.name === this.repoName);
+    this.fetchProjectData();
   }
 };
 </script>

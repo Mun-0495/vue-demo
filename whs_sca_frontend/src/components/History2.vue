@@ -58,55 +58,44 @@ import { onMounted } from 'vue';
 
 export default {
   name: 'History2',
-  props: ['projectId'],
+  props: ['projectName'],
   data() {
     return {
-      projects: [
-        {
-          id: 1,
-          name: 'Project A',
-          lastAnalyzed: '2024-06-15',
-          previousVersions: [
-            { version: '1.3.0', critical: 1, high: 0, medium: 0, low: 0, unassigned: 0 },
-            { version: '1.2.5', critical: 2, high: 0, medium: 0, low: 0, unassigned: 0 },
-            { version: '1.2.4', critical: 3, high: 0, medium: 0, low: 0, unassigned: 0 }
-          ]
-        },
-        {
-          id: 2,
-          name: 'Project B',
-          lastAnalyzed: '2024-06-14',
-          previousVersions: [
-            { version: '1.1.0', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 },
-            { version: '1.0.5', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 }
-          ]
-        },
-        {
-          id: 3,
-          name: 'Project C',
-          lastAnalyzed: '2024-06-13',
-          previousVersions: [
-            { version: '2.0.0', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 },
-            { version: '1.9.5', critical: 0, high: 0, medium: 0, low: 0, unassigned: 0 }
-          ]
-        }
-      ],
       project: {},
       mostRecentVersion: {},
       previousVersions: []
     };
   },
   created() {
-    this.project = this.projects.find(p => p.id == this.projectId);
-    if (this.project) {
-      this.previousVersions = this.project.previousVersions.reverse();
-      this.mostRecentVersion = this.previousVersions[0];
-    }
-  },
-  mounted() {
-    this.renderChart();
+    this.fetchProjectData();
   },
   methods: {
+    async fetchProjectData() {
+      try {
+        const response = await fetch(`http://113.198.229.153:107/api/project/${this.projectName}/history`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch project data');
+        }
+        const data = await response.json();
+        this.project = {
+          name: data.name,
+          lastAnalyzed: data.date,
+          previousVersions: data.ver_lists.map(version => ({
+            version: version.version,
+            critical: version.vuln.vuln_lists.filter(vuln => vuln.severity === 'Critical').length,
+            high: version.vuln.vuln_lists.filter(vuln => vuln.severity === 'High').length,
+            medium: version.vuln.vuln_lists.filter(vuln => vuln.severity === 'Medium').length,
+            low: version.vuln.vuln_lists.filter(vuln => vuln.severity === 'Low').length,
+            unassigned: version.vuln.vuln_lists.filter(vuln => vuln.severity === 'Unassigned').length,
+          }))
+        };
+        this.previousVersions = this.project.previousVersions.reverse();
+        this.mostRecentVersion = this.previousVersions[0];
+        this.renderChart();
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+      }
+    },
     renderChart() {
       const ctx = document.getElementById('vulnerabilityChart').getContext('2d');
       new Chart(ctx, {
@@ -209,7 +198,7 @@ h1:after {
 
 canvas {
   margin-bottom: 20px;
-  height: 400px !important; /* 그래프 세로 길이를 줄이기 */
+  height: 100px !important; /* 그래프 세로 길이를 줄이기 */
 }
 
 .info-title {
