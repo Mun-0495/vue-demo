@@ -1,24 +1,23 @@
 import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router';
-import Server from './components/Server.vue';
-import RepoDashboard from './components/Repo_dashboard.vue'; // 변경된 파일명으로 업데이트
+import ServerDashboard from './components/ServerDashboard.vue';
+import CodeDashboard from './components/CodeDashboard.vue';
 import History from './components/History.vue';
-import License from './components/license.vue';
-import ProjectHistory from './components/ProjectHistory.vue';
-import Repository from '../components/Repository.vue';
+import History2 from './components/History2.vue';
+import Project from '../components/Project.vue';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/', component: Repository },
+  { path: '/', component: Project },
   { path: '/server', component: Server },
-  { path: '/repo-dashboard/:repoName', name: 'RepoDashboard', component: RepoDashboard, props: true }, // 변경된 파일명으로 업데이트
+  { path: '/codedashboard/:repoName', name: 'CodeDashboard', component: CodeDashboard, props: true },
+  { path: '/serverdashboard/:repoName', name: 'ServerDashboard', component: ServerDashboard, props: true },
   { path: '/history', component: History },
-  { path: '/license', component: License },
-  { path: '/project-history/:projectId', component: ProjectHistory, props: true }
+  { path: '/history/:projectId', component: History2, props: true }
 ];
 
 const router = new VueRouter({
